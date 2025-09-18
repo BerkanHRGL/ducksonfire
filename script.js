@@ -1,6 +1,70 @@
+
+// Simple Page Transition System
+class PageTransition {
+    constructor() {
+        this.createOverlay();
+        this.bindEvents();
+    }
+
+    createOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'page-transition';
+        overlay.innerHTML = '<div class="transition-text">LOADING...</div>';
+        document.body.appendChild(overlay);
+        this.overlay = overlay;
+    }
+
+    bindEvents() {
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href]');
+            if (link && this.shouldTransition(link)) {
+                e.preventDefault();
+                this.transitionToPage(link.href);
+            }
+        });
+    }
+
+    shouldTransition(link) {
+        const href = link.getAttribute('href');
+        return href && !href.startsWith('#') && !href.startsWith('http') &&
+               !href.includes('.zip') && href.includes('.html');
+    }
+
+    async transitionToPage(url) {
+        // Update text
+        const text = url.includes('about') ? 'ABOUT US' : 'HOME';
+        this.overlay.querySelector('.transition-text').textContent = text;
+
+        // Hide current page content immediately
+        document.body.classList.add('transitioning');
+
+        // Show overlay slightly after
+        await this.delay(50);
+        this.overlay.classList.add('active');
+
+        // Wait for fade-in animations
+        await this.delay(750);
+
+        // Start fade-out
+        this.overlay.classList.add('fade-out');
+
+        // Wait for fade-out to complete then navigate
+        await this.delay(600);
+        window.location.href = url;
+    }
+
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+}
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
-    
+
+    // Initialize page transitions
+    new PageTransition();
+
+
     // Smooth scroll for navigation links
     const navLinks = document.querySelectorAll('nav a');
     navLinks.forEach(link => {
@@ -22,13 +86,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function updateParallax() {
             const scrolled = window.pageYOffset;
-            
+
             videos.forEach((video, index) => {
                 const speed = index === 0 ? 0.5 : 0.3;
                 const yPos = -(scrolled * speed);
                 video.style.transform = `translateY(${yPos}px)`;
             });
-            
+
             ticking = false;
         }
 
@@ -49,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
             word.style.opacity = '0';
             word.style.transform = 'translateY(30px)';
             word.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-            
+
             setTimeout(() => {
                 word.style.opacity = '1';
                 word.style.transform = 'translateY(0)';
@@ -64,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             word.style.opacity = '0';
             word.style.transform = 'translateY(30px)';
             word.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-            
+
             setTimeout(() => {
                 word.style.opacity = '1';
                 word.style.transform = 'translateY(0)';
@@ -147,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('mouseenter', function() {
             this.style.boxShadow = '0 8px 25px rgba(10, 139, 139, 0.3)';
         });
-        
+
         button.addEventListener('mouseleave', function() {
             this.style.boxShadow = '0 4px 15px rgba(10, 139, 139, 0.2)';
         });
@@ -159,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.transform = 'translateX(3px)';
             this.style.transition = 'transform 0.3s ease';
         });
-        
+
         link.addEventListener('mouseleave', function() {
             this.style.transform = '';
         });
@@ -184,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.style.boxShadow = '0 15px 40px rgba(58, 48, 41, 0.15)';
             this.style.borderColor = '#e85e3a';
         });
-        
+
         member.addEventListener('mouseleave', function() {
             this.style.transform = '';
             this.style.boxShadow = '';
@@ -202,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.style.transition = 'transform 0.3s ease';
             }
         });
-        
+
         item.addEventListener('mouseleave', function() {
             const icon = this.querySelector('.value-icon');
             if (icon) {
@@ -232,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add a subtle loading animation
         heroImage.style.background = 'linear-gradient(135deg, #d4c4b4 0%, #a89484 100%)';
         heroImage.style.position = 'relative';
-        
+
         // Add a placeholder content
         const placeholder = document.createElement('div');
         placeholder.style.cssText = `

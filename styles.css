@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Oswald', sans-serif;
-    background: #e8d4c1;
+    background: #EDCBAB;
     position: relative;
     min-height: 100vh;
     overflow-x: hidden;
@@ -21,14 +21,14 @@ body::before {
     width: 100%;
     height: 100%;
     background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 70px),
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(39, 6, 6, 0.02) 35px, rgba(0,0,0,.02) 70px),
         repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(0,0,0,.01) 35px, rgba(0,0,0,.01) 70px);
     opacity: 0.3;
     z-index: 1;
     pointer-events: none;
 }
 
-/* Noise texture for more authentic look */
+/* Simple visible noise test */
 body::after {
     content: '';
     position: absolute;
@@ -36,11 +36,18 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.03;
+    opacity: 0.3;
     z-index: 1;
     pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background:
+        repeating-conic-gradient(from 0deg at 50% 50%,
+            transparent 0deg,
+            rgba(0,0,0,0.8) 0.5deg,
+            transparent 1deg,
+            transparent 360deg);
+    background-size: 2px 2px;
 }
+
 
 .container {
     position: relative;
@@ -50,6 +57,20 @@ body::after {
     margin: 0 auto;
     padding: 20px 40px;
     min-height: 850px;
+}
+
+.container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.91 0.83 0.76 0 0 0.91 0.83 0.76 0 0 0.91 0.83 0.76 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-size: 25px 25px;
+    opacity: 0.5;
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* Header */
@@ -81,8 +102,8 @@ nav {
     display: flex;
     gap: 70px;
     position: absolute;
-    right: 0px;
-    top: 45px;
+    right: 40px;
+    top: 25px;
     z-index: 10;
 }
 
@@ -117,12 +138,13 @@ nav a.active {
 /* Line connecting logo to nav frame */
 .line-logo-to-nav {
     position: absolute;
-    top: 125px;
+    top: 80px;
     left: 195px;
     right: 360px;
     height: 2px;
     background: #3a3029;
     z-index: 3;
+    width: 905px;
 }
 
 /* Navigation frame box */
@@ -138,14 +160,27 @@ nav a.active {
 
 /* About page nav frame adjustment */
 .about-nav-frame {
-    height: 200px;
+    height: 340px;
+    top: 150px;
+}
+
+/* Home page nav frame adjustment */
+.home-nav-frame {
+    height: 340px;
+    top: 150px;
+}
+
+/* Game page nav frame adjustment */
+.game-nav-frame {
+    height: 340px;
+    top: 150px;
 }
 
 .nav-frame-bottom {
     position: absolute;
-    top: 196px;
+    top: 148px;
     right: 40px;
-    width: 320px;
+    width: 260px;
     height: 2px;
     background: #3a3029;
     z-index: 3;
@@ -153,10 +188,10 @@ nav a.active {
 
 .nav-frame-left {
     position: absolute;
-    top: 125px;
-    right: 358px;
+    top: 80px;
+    right: 300px;
     width: 2px;
-    height: 72px;
+    height: 70px;
     background: #3a3029;
     z-index: 3;
 }
@@ -302,31 +337,87 @@ nav a.active {
     z-index: 5;
 }
 
-.about-title {
-    font-size: clamp(60px, 10vw, 120px);
-    line-height: 0.9;
-    margin-bottom: 40px;
-    font-weight: 700;
-    letter-spacing: -2px;
+.about-header-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
     padding: 0 80px;
-    text-align: center;
+    align-items: start;
+}
+
+.about-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
 }
 
 .about-word {
     color: #3a3029;
+    font-size: clamp(60px, 10vw, 160px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    line-height: 0.8;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+    margin-bottom: 10px;
 }
 
-.ducks-word {
-    color: #e85e3a;
-    display: block;
-    margin-top: 20px;
+.about-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.on-fire-word {
+.about-images-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    height: 500px;
+}
+
+.about-img {
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 10px 30px rgba(58, 48, 41, 0.2);
+}
+
+.about-img-1 {
+    grid-column: 1 / 3;
+    width: 100%;
+    height: 240px;
+}
+
+.about-img-2 {
+    width: 100%;
+    height: 240px;
+}
+
+.about-img-3 {
+    width: 100%;
+    height: 240px;
+}
+
+.ducks-vertical,
+.on-vertical,
+.fire-vertical {
     color: #e85e3a;
-    font-size: 0.6em;
-    vertical-align: top;
-    margin-left: 20px;
+    font-size: clamp(60px, 10vw, 160px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    line-height: 0.8;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+    text-shadow:
+        1px 1px 0 #35231D,
+        2px 2px 0 #35231D,
+        3px 3px 0 #35231D,
+        4px 4px 0 #35231D,
+        5px 5px 0 #35231D,
+        6px 6px 0 #35231D,
+        7px 7px 0 #35231D,
+        8px 8px 15px rgba(53, 35, 29, 0.5);
+    margin-bottom: 0px;
 }
 
 /* About Content Sections */
@@ -338,6 +429,8 @@ nav a.active {
     padding: 0 80px;
     position: relative;
     z-index: 5;
+    opacity: 1;
+    visibility: visible;
 }
 
 .hero-image {
@@ -364,6 +457,8 @@ nav a.active {
     margin-bottom: 30px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+
 }
 
 .mission-text {
@@ -379,6 +474,8 @@ nav a.active {
     padding: 80px 80px;
     position: relative;
     z-index: 5;
+    opacity: 1;
+    visibility: visible;
 }
 
 .team-title {
@@ -460,6 +557,8 @@ nav a.active {
     border-radius: 8px;
     position: relative;
     z-index: 5;
+    opacity: 1;
+    visibility: visible;
 }
 
 .values-title {
@@ -518,6 +617,8 @@ nav a.active {
     padding: 60px 80px;
     position: relative;
     z-index: 5;
+    opacity: 1;
+    visibility: visible;
 }
 
 .cta-text {
@@ -526,6 +627,382 @@ nav a.active {
     margin-bottom: 30px;
     font-weight: 500;
     letter-spacing: 1px;
+}
+
+/* Page Transition Overlay */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #EDCBAB;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
+    transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.page-transition.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.page-transition::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(58, 48, 41, 0.1) 25%,
+        rgba(58, 48, 41, 0.2) 50%,
+        rgba(58, 48, 41, 0.1) 75%,
+        transparent);
+    transition: left 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.page-transition.active::before {
+    left: 100%;
+}
+
+.page-transition::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2.5' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0.91 0.83 0.76 0 0 0.91 0.83 0.76 0 0 0.91 0.83 0.76 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-size: 25px 25px;
+    opacity: 0.5;
+    animation: noiseShift 2s ease-in-out infinite alternate;
+}
+
+@keyframes noiseShift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(2px, 2px); }
+}
+
+.transition-text {
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+    font-size: clamp(40px, 8vw, 80px);
+    color: #3a3029;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-shadow:
+        1px 1px 0 #35231D,
+        2px 2px 0 #35231D,
+        3px 3px 0 #35231D,
+        4px 4px 10px rgba(53, 35, 29, 0.3);
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    transition: all 0.6s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
+}
+
+.page-transition.active .transition-text {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.page-transition.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.6s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.page-transition.fade-out .transition-text {
+    opacity: 0;
+    transform: translateY(-20px) scale(1.1);
+    transition: all 0.4s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+.page-transition.fade-out::before {
+    left: -100%;
+    transition: left 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
+body.transitioning .container {
+    opacity: 0;
+    transform: scale(0.98);
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/* =================================
+   GAME PAGE STYLES
+   ================================= */
+
+/* Game Hero Section */
+.game-hero {
+    padding: 120px 0 60px 0;
+    position: relative;
+    z-index: 5;
+}
+
+.game-header-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    padding: 0 80px;
+    align-items: center;
+}
+
+.game-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.game-title,
+.on-fire-title {
+    color: #e85e3a;
+    font-size: clamp(80px, 12vw, 160px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    line-height: 0.8;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+    text-shadow:
+        1px 1px 0 #35231D,
+        2px 2px 0 #35231D,
+        3px 3px 0 #35231D,
+        4px 4px 0 #35231D,
+        5px 5px 0 #35231D,
+        6px 6px 0 #35231D,
+        7px 7px 0 #35231D,
+        8px 8px 15px rgba(53, 35, 29, 0.5);
+}
+
+.game-subtitle {
+    color: #3a3029;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 600;
+    letter-spacing: 4px;
+    margin-top: 20px;
+    font-family: 'Oswald', sans-serif;
+}
+
+.game-image {
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(135deg, #e85e3a 0%, #d64e2a 100%);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(232, 94, 58, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-image::after {
+    content: '🔥🦆';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    opacity: 0.8;
+}
+
+/* Game Story Section */
+.game-story {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin: 80px 0;
+    padding: 0 80px;
+    position: relative;
+    z-index: 5;
+    opacity: 1;
+    visibility: visible;
+}
+
+.story-content {
+    background: rgba(58, 48, 41, 0.05);
+    padding: 40px;
+    border-radius: 8px;
+    border-left: 4px solid #e85e3a;
+}
+
+.story-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #e85e3a;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+}
+
+.story-text p {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #3a3029;
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+.story-text strong {
+    color: #e85e3a;
+    font-weight: 600;
+}
+
+.story-image {
+    width: 100%;
+    height: 350px;
+    background: linear-gradient(135deg, #d4c4b4 0%, #a89484 100%);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(58, 48, 41, 0.15);
+    position: relative;
+}
+
+.story-image::after {
+    content: 'NORMAN REEDUCK';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: rgba(58, 48, 41, 0.3);
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* Game Features Section */
+.game-features {
+    padding: 80px;
+    margin: 60px 0;
+    background: rgba(58, 48, 41, 0.03);
+    border-radius: 8px;
+    position: relative;
+    z-index: 5;
+    opacity: 1;
+    visibility: visible;
+}
+
+.features-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #3a3029;
+    text-align: center;
+    margin-bottom: 60px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(58, 48, 41, 0.15);
+    border-color: #e85e3a;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: #e85e3a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: white;
+}
+
+.feature-name {
+    font-size: 24px;
+    font-weight: 600;
+    color: #3a3029;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.feature-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #3a3029;
+    opacity: 0.8;
+}
+
+/* Game Download Section */
+.game-download {
+    text-align: center;
+    padding: 80px;
+    background: linear-gradient(135deg, rgba(232, 94, 58, 0.1) 0%, rgba(214, 78, 42, 0.1) 100%);
+    border-radius: 8px;
+    margin: 60px 0;
+    position: relative;
+    z-index: 5;
+    opacity: 1;
+    visibility: visible;
+}
+
+.download-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #e85e3a;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
+}
+
+.download-text {
+    font-size: 20px;
+    color: #3a3029;
+    margin-bottom: 40px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.download-button {
+    background: #e85e3a;
+    color: white;
+    border: none;
+    padding: 18px 45px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    border-radius: 4px;
+    box-shadow: 0 6px 20px rgba(232, 94, 58, 0.3);
+}
+
+.download-button:hover {
+    background: #d64e2a;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(232, 94, 58, 0.4);
+}
+
+.download-note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #3a3029;
+    opacity: 0.7;
+    font-style: italic;
 }
 
 /* Animation Classes */
@@ -549,10 +1026,9 @@ nav a.active {
 }
     
     nav {
-        right: 60px;
+        right: 0px;
     }
-}
-
+    
 @media (max-width: 768px) {
     .container {
         padding: 20px;
