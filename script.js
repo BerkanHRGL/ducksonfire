@@ -31,8 +31,15 @@ class PageTransition {
     }
 
     async transitionToPage(url) {
-        // Update text
-        const text = url.includes('about') ? 'ABOUT US' : 'HOME';
+        // Update text based on destination
+        let text = 'HOME';
+        if (url.includes('about')) {
+            text = 'ABOUT US';
+        } else if (url.includes('game')) {
+            text = 'GAME';
+        } else if (url.includes('services')) {
+            text = 'SERVICES';
+        }
         this.overlay.querySelector('.transition-text').textContent = text;
 
         // Hide current page content immediately
@@ -63,6 +70,46 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize page transitions
     new PageTransition();
+
+    // ===== SUBTLE SLOGAN INTERACTIONS (HOME PAGE ONLY) =====
+    if (!document.body.classList.contains('about-page') &&
+        !document.body.classList.contains('game-page') &&
+        !document.body.classList.contains('services-page')) {
+
+        const weIgnite = document.querySelector('.we-ignite');
+        const ideas = document.querySelector('.ideas');
+
+        // Simple parallax effect on scroll
+        if (weIgnite && ideas) {
+            let scrollTicking = false;
+
+            function updateSloganParallax() {
+                const scrolled = window.pageYOffset;
+                const rate = scrolled * -0.1;
+
+                if (scrolled > 30) {
+                    weIgnite.style.transform = `translateY(${rate}px)`;
+                    ideas.style.transform = `translateY(${rate * 0.8}px)`;
+                } else {
+                    weIgnite.style.transform = '';
+                    ideas.style.transform = '';
+                }
+
+                scrollTicking = false;
+            }
+
+            function requestScrollTick() {
+                if (!scrollTicking) {
+                    window.requestAnimationFrame(updateSloganParallax);
+                    scrollTicking = true;
+                }
+            }
+
+            window.addEventListener('scroll', requestScrollTick);
+        }
+    }
+
+
 
 
     // Smooth scroll for navigation links
@@ -310,5 +357,82 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         placeholder.textContent = 'TEAM';
         heroImage.appendChild(placeholder);
+    }
+
+    // Advanced cinematic video animations (About page only)
+    if (document.body.classList.contains('about-page')) {
+        const cinematicVideos = document.querySelectorAll('.about-gif');
+
+        // Magnetic mouse follow effect
+        cinematicVideos.forEach(video => {
+            video.addEventListener('mousemove', (e) => {
+                const rect = video.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+
+                const rotateX = deltaY * -10;
+                const rotateY = deltaX * 10;
+
+                video.style.transform = `
+                    translateY(-10px)
+                    scale(1.02)
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                `;
+            });
+
+            video.addEventListener('mouseleave', () => {
+                video.style.transform = '';
+            });
+        });
+
+        // Parallax scroll effect for videos
+        let ticking = false;
+
+        function updateVideoParallax() {
+            const scrolled = window.pageYOffset;
+
+            cinematicVideos.forEach((video, index) => {
+                const rect = video.getBoundingClientRect();
+                const speed = (index + 1) * 0.1;
+                const yPos = scrolled * speed;
+
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const videoElement = video.querySelector('.cinematic-video');
+                    if (videoElement) {
+                        videoElement.style.transform = `translateY(${yPos}px) scale(1.05)`;
+                    }
+                }
+            });
+
+            ticking = false;
+        }
+
+        function requestVideoTick() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateVideoParallax);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestVideoTick);
+
+        // Staggered entrance animation
+        cinematicVideos.forEach((video, index) => {
+            video.style.opacity = '0';
+            video.style.transform = 'translateY(50px) scale(0.8)';
+            video.style.transition = 'all 1s cubic-bezier(0.23, 1, 0.320, 1)';
+
+            setTimeout(() => {
+                video.style.opacity = '1';
+                video.style.transform = 'translateY(0) scale(1)';
+            }, 200 + (index * 300));
+        });
     }
 });
