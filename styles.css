@@ -551,12 +551,6 @@ nav a.active {
     nav {
         right: 60px;
     }
-    
-    /* About page responsive adjustments */
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
 }
 
 @media (max-width: 768px) {
