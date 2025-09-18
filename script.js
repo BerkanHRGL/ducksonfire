@@ -1,0 +1,250 @@
+// Wait for DOM to load
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Smooth scroll for navigation links
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    });
+
+    const videos = document.querySelectorAll('.video-container');
+    if (videos.length > 0 && !document.body.classList.contains('about-page')) {
+        let ticking = false;
+
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            
+            videos.forEach((video, index) => {
+                const speed = index === 0 ? 0.5 : 0.3;
+                const yPos = -(scrolled * speed);
+                video.style.transform = `translateY(${yPos}px)`;
+            });
+            
+            ticking = false;
+        }
+
+        function requestTick() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestTick);
+    }
+
+    // Animate title on load (main page)
+    const titleWords = document.querySelectorAll('.main-title span');
+    if (titleWords.length > 0) {
+        titleWords.forEach((word, index) => {
+            word.style.opacity = '0';
+            word.style.transform = 'translateY(30px)';
+            word.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            setTimeout(() => {
+                word.style.opacity = '1';
+                word.style.transform = 'translateY(0)';
+            }, 200 + (index * 200));
+        });
+    }
+
+    // Animate about title on load (about page)
+    const aboutTitleWords = document.querySelectorAll('.about-title span');
+    if (aboutTitleWords.length > 0) {
+        aboutTitleWords.forEach((word, index) => {
+            word.style.opacity = '0';
+            word.style.transform = 'translateY(30px)';
+            word.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+            
+            setTimeout(() => {
+                word.style.opacity = '1';
+                word.style.transform = 'translateY(0)';
+            }, 200 + (index * 300));
+        });
+    }
+
+    // Animate lines on load
+    const lines = [
+        '.line-logo-to-nav',
+        '.nav-frame-top',
+        '.nav-frame-right',
+        '.nav-frame-bottom',
+        '.nav-frame-left',
+        '.nav-to-content-connector',
+        '.content-frame-top',
+        '.content-frame-right',
+        '.content-frame-bottom',
+        '.content-frame-left'
+    ];
+
+    lines.forEach((lineSelector, index) => {
+        const line = document.querySelector(lineSelector);
+        if (line) {
+            if (lineSelector.includes('horizontal')) {
+                line.style.width = '0';
+                line.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => {
+                    line.style.width = '';
+                }, 500 + (index * 100));
+            } else {
+                line.style.height = '0';
+                line.style.transition = 'height 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                setTimeout(() => {
+                    line.style.height = '';
+                }, 500 + (index * 100));
+            }
+        }
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    // Observe content elements (main page and about page)
+    const contentElements = document.querySelectorAll('.video-container, .text-content, .animate-on-scroll');
+    contentElements.forEach(el => {
+        if (!el.style.opacity) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        }
+        observer.observe(el);
+    });
+
+    // Add fade-in class styles dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+        .fade-in {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Button hover effect
+    const ctaButtons = document.querySelectorAll('.cta-button');
+    ctaButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 8px 25px rgba(10, 139, 139, 0.3)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.boxShadow = '0 4px 15px rgba(10, 139, 139, 0.2)';
+        });
+    });
+
+    // Add subtle hover effect to nav links
+    navLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(3px)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
+    });
+
+    // Handle video loading (when you add your videos)
+    const videoElements = document.querySelectorAll('video');
+    videoElements.forEach(video => {
+        // Ensure videos play smoothly
+        video.addEventListener('loadeddata', function() {
+            this.play().catch(e => {
+                console.log('Video autoplay was prevented:', e);
+            });
+        });
+    });
+
+    // Team member hover effects (about page only)
+    const teamMembers = document.querySelectorAll('.team-member');
+    teamMembers.forEach(member => {
+        member.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 15px 40px rgba(58, 48, 41, 0.15)';
+            this.style.borderColor = '#e85e3a';
+        });
+        
+        member.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+            this.style.borderColor = 'transparent';
+        });
+    });
+
+    // Value items subtle animation on hover (about page only)
+    const valueItems = document.querySelectorAll('.value-item');
+    valueItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            const icon = this.querySelector('.value-icon');
+            if (icon) {
+                icon.style.transform = 'scale(1.1)';
+                icon.style.transition = 'transform 0.3s ease';
+            }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            const icon = this.querySelector('.value-icon');
+            if (icon) {
+                icon.style.transform = '';
+            }
+        });
+    });
+
+    // Enhanced scroll animations for about page sections
+    if (document.body.classList.contains('about-page')) {
+        // Staggered animation for team members
+        const teamMemberElements = document.querySelectorAll('.team-member');
+        teamMemberElements.forEach((member, index) => {
+            member.style.transitionDelay = `${index * 0.1}s`;
+        });
+
+        // Staggered animation for value items
+        const valueItemElements = document.querySelectorAll('.value-item');
+        valueItemElements.forEach((item, index) => {
+            item.style.transitionDelay = `${index * 0.15}s`;
+        });
+    }
+
+    // Add loading animation for hero image on about page
+    const heroImage = document.querySelector('.hero-image');
+    if (heroImage) {
+        // Add a subtle loading animation
+        heroImage.style.background = 'linear-gradient(135deg, #d4c4b4 0%, #a89484 100%)';
+        heroImage.style.position = 'relative';
+        
+        // Add a placeholder content
+        const placeholder = document.createElement('div');
+        placeholder.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: rgba(58, 48, 41, 0.3);
+            font-weight: bold;
+        `;
+        placeholder.textContent = 'TEAM';
+        heroImage.appendChild(placeholder);
+    }
+});
