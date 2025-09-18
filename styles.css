@@ -602,13 +602,13 @@ nav a.active {
     background: rgba(58, 48, 41, 0.05);
     padding: 40px;
     border-radius: 8px;
-    border-left: 4px solid #e85e3a;
+    border-left: 4px solid #35231D;
 }
 
 .mission-title {
     font-size: 32px;
     font-weight: 700;
-    color: #e85e3a;
+    color: #35231D;
     margin-bottom: 30px;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -634,6 +634,7 @@ nav a.active {
 }
 
 .team-title {
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
     font-size: 48px;
     font-weight: 700;
     color: #3a3029;
@@ -680,6 +681,7 @@ nav a.active {
 }
 
 .team-name {
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
     font-size: 24px;
     font-weight: 600;
     color: #3a3029;
@@ -717,6 +719,7 @@ nav a.active {
 }
 
 .values-title {
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
     font-size: 48px;
     font-weight: 700;
     color: #3a3029;
@@ -751,6 +754,7 @@ nav a.active {
 }
 
 .value-name {
+    font-family: 'BACKCOUNTRY', 'Oswald', sans-serif;
     font-size: 24px;
     font-weight: 600;
     color: #3a3029;
