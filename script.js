@@ -65,6 +65,38 @@ class PageTransition {
     }
 }
 
+// ===== RETRO LOADING SCREEN (FIRST VISIT ONLY) =====
+// Check immediately when script loads, before DOM is ready
+if (sessionStorage.getItem('hasVisited')) {
+    // Hide loading screen immediately with CSS if already visited
+    const style = document.createElement('style');
+    style.textContent = '.loading-screen { display: none !important; }';
+    document.head.appendChild(style);
+}
+
+window.addEventListener('load', function() {
+    const loadingScreen = document.getElementById('loadingScreen');
+
+    // Only show loading screen on first visit to the website
+    if (loadingScreen && !sessionStorage.getItem('hasVisited')) {
+        // Mark as visited for this session
+        sessionStorage.setItem('hasVisited', 'true');
+
+        // Minimum loading time for effect (3.5 seconds to match animation)
+        setTimeout(() => {
+            loadingScreen.classList.add('fade-out');
+
+            // Remove loading screen from DOM after fade
+            setTimeout(() => {
+                loadingScreen.remove();
+            }, 800);
+        }, 3500);
+    } else if (loadingScreen) {
+        // If already visited, remove loading screen immediately
+        loadingScreen.remove();
+    }
+});
+
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
 
